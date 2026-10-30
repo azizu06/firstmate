@@ -1,0 +1,47 @@
+$ FM_HOME=<lab> FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_MODEL=local FM_DISPATCH_BASE_URL=http://127.0.0.1:47613 QUOTA_AXI_SNAPSHOT=snap-claude-exhausted.json bin/fm-dispatch-resolve.sh brief.md   # S3e native Claude exhausted, Devin included healthy: priced still needs approval
+# rules: {"shared_quota":null,"use":[{"harness":"devin","model":"swe-2-medium"},{"harness":"devin"},{"harness":"devin","model":"fusion-claude-fable-5-1-high-sidekick-swe-2-medium"},{"harness":"claude","model":"sonnet","effort":"high"}]}
+# quota-axi --json devin/claude rows: {"claude":["all_models 0% exhausted_now sp=-0.6543"],"devin":["included_quota 100% through_reset sp=2.3417"]}
+dispatch-resolve:
+  status: escalate
+  model: local-systemone   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (Devin work on the session exporter.)   confidence: 0.9
+  probabilities: rule_1=0.9 rule_2=0.04999999999999999 default=0.04999999999999999
+  reason: devin:fusion-claude-fable-5-1-high-sidekick-swe-2-medium is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:swe-2-medium  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:-  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:fusion-claude-fable-5-1-high-sidekick-swe-2-medium  provider=devin  scope=included_quota  remaining=100%  spendPriority=2.3417  runway=through_reset  -> eligible
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=0%  spendPriority=-  runway=exhausted_now  -> not eligible: runway exhausted_now at all_models
+# exit=0
+
+$ FM_HOME=<lab> FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_MODEL=local FM_DISPATCH_BASE_URL=http://127.0.0.1:47613 QUOTA_AXI_SNAPSHOT=snap-devin-exhausted.json bin/fm-dispatch-resolve.sh brief.md   # S4a Free-only rule, included window exhausted
+# rules: {"shared_quota":null,"use":[{"harness":"devin","model":"swe-2-high"},{"harness":"devin","model":"swe-2-medium"},{"harness":"devin","model":"swe-2-max"},{"harness":"devin"}]}
+# quota-axi --json devin/claude rows: {"claude":["all_models 79% projected_exhaustion sp=1.6702"],"devin":["included_quota 0% exhausted_now sp=-0.3158"]}
+dispatch-resolve:
+  status: escalate
+  model: local-systemone   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (Devin work on the session exporter.)   confidence: 0.9
+  probabilities: rule_1=0.9 rule_2=0.04999999999999999 default=0.04999999999999999
+  reason: no rankable eligible candidate
+  note: rule matched
+  candidate: devin:swe-2-high  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:swe-2-medium  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:swe-2-max  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:-  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+# exit=0
+
+$ FM_HOME=<lab> FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_MODEL=local FM_DISPATCH_BASE_URL=http://127.0.0.1:47613 QUOTA_AXI_SNAPSHOT=snap-healthy.json bin/fm-dispatch-resolve.sh brief.md   # S4b Free-only rule, included window healthy
+# rules: {"shared_quota":null,"use":[{"harness":"devin","model":"swe-2-high"},{"harness":"devin","model":"swe-2-medium"},{"harness":"devin","model":"swe-2-max"},{"harness":"devin"}]}
+# quota-axi --json devin/claude rows: {"claude":["all_models 79% projected_exhaustion sp=1.6703"],"devin":["included_quota 100% through_reset sp=2.3425"]}
+dispatch-resolve:
+  status: escalate
+  model: local-systemone   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (Devin work on the session exporter.)   confidence: 0.9
+  probabilities: rule_1=0.9 rule_2=0.04999999999999999 default=0.04999999999999999
+  reason: no rankable eligible candidate
+  note: rule matched
+  candidate: devin:swe-2-high  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:swe-2-medium  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:swe-2-max  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:-  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+# exit=0

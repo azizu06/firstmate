@@ -1,0 +1,16 @@
+$ FM_HOME=<lab> FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_MODEL=local FM_DISPATCH_BASE_URL=http://127.0.0.1:47613 QUOTA_AXI_SNAPSHOT=snap-no-devin.json bin/fm-dispatch-resolve.sh brief.md   # S3f Devin absent from quota-axi (not set up): priced line is unmeasured, never cleared
+# rules: {"shared_quota":null,"use":[{"harness":"devin","model":"swe-2-medium"},{"harness":"devin"},{"harness":"devin","model":"fusion-claude-fable-5-1-high-sidekick-swe-2-medium"},{"harness":"claude","model":"sonnet","effort":"high"}]}
+# quota-axi --json devin/claude rows: {"claude":["all_models 79% projected_exhaustion sp=1.6713"],"devin":[]}
+dispatch-resolve:
+  status: clear
+  model: local-systemone   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (Devin work on the session exporter.)   confidence: 0.9
+  probabilities: rule_1=0.9 rule_2=0.04999999999999999 default=0.04999999999999999
+  note: rule matched
+  note: 3 eligible candidate(s) unranked (devin)
+  candidate: devin:swe-2-medium  provider=devin  -> eligible, unranked: provider devin unmeasured (unknown): disclosed uncertainty
+  candidate: devin:-  provider=devin  -> eligible, unranked: provider devin unmeasured (unknown): disclosed uncertainty
+  candidate: devin:fusion-claude-fable-5-1-high-sidekick-swe-2-medium  provider=devin  -> eligible, unranked: provider devin unmeasured (unknown): disclosed uncertainty
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=79%  spendPriority=1.6713  runway=projected_exhaustion  -> eligible
+  profile: --harness 'claude' --model 'sonnet' --effort 'high'
+# exit=0

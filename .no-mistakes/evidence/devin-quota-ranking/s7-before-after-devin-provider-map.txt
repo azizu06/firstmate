@@ -1,0 +1,18 @@
+### base df81d816: rules list devin:swe-2-medium, devin (no model), devin:fusion-... (priced), claude:sonnet; healthy Devin included window
+error: malformed rules file: /var/folders/ml/g9hzrwq51sj3kth8nt3yxj840000gn/T//fm-lab.wLtXmd/config/crew-dispatch.json - use profiles whose harness lacks one authoritative provider family require provider: devin; use profiles whose harness lacks one authoritative provider family require provider: devin; use profiles whose harness lacks one authoritative provider family require provider: devin
+# exit=2
+
+### change ce8b9a69: rules list devin:swe-2-medium, devin (no model), devin:fusion-... (priced), claude:sonnet; healthy Devin included window
+dispatch-resolve:
+  status: escalate
+  model: local-systemone   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (Devin work on the session exporter.)   confidence: 0.9
+  probabilities: rule_1=0.9 rule_2=0.04999999999999999 default=0.04999999999999999
+  reason: devin:fusion-claude-fable-5-1-high-sidekick-swe-2-medium is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:swe-2-medium  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:-  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:fusion-claude-fable-5-1-high-sidekick-swe-2-medium  provider=devin  scope=included_quota  remaining=100%  spendPriority=2.3433  runway=through_reset  -> eligible
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=79%  spendPriority=1.6712  runway=projected_exhaustion  -> eligible
+# exit=0
+

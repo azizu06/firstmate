@@ -1,0 +1,42 @@
+$ FM_HOME=<lab> FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_MODEL=local FM_DISPATCH_BASE_URL=http://127.0.0.1:47613 QUOTA_AXI_SNAPSHOT=- bin/fm-dispatch-resolve.sh brief.md   # S5a shared_quota home, Free swe-2-medium declared first
+# rules: {"shared_quota":true,"use":[{"harness":"devin","model":"swe-2-medium"},{"harness":"devin"},{"harness":"devin","model":"fusion-claude-fable-5-1-high-sidekick-swe-2-medium"},{"harness":"claude","model":"sonnet","effort":"high"}]}
+dispatch-resolve:
+  status: clear
+  model: local-systemone   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (Devin work on the session exporter.)   confidence: 0.9
+  probabilities: rule_1=0.9 rule_2=0.04999999999999999 default=0.04999999999999999
+  note: rule matched
+  candidate: devin:swe-2-medium  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: devin:-  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: devin:fusion-claude-fable-5-1-high-sidekick-swe-2-medium  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: claude:sonnet  provider=claude  -> eligible (quota ranking off: home declares a single shared quota)
+  profile: --harness 'devin' --model 'swe-2-medium'
+# exit=0
+
+$ FM_HOME=<lab> FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_MODEL=local FM_DISPATCH_BASE_URL=http://127.0.0.1:47613 QUOTA_AXI_SNAPSHOT=- bin/fm-dispatch-resolve.sh brief.md   # S5b shared_quota home, priced Fusion line declared first
+# rules: {"shared_quota":true,"use":[{"harness":"devin","model":"fusion-claude-fable-5-1-high-sidekick-swe-2-medium"},{"harness":"devin","model":"swe-2-medium"},{"harness":"claude","model":"sonnet","effort":"high"}]}
+dispatch-resolve:
+  status: escalate
+  model: local-systemone   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (Devin work on the session exporter.)   confidence: 0.9
+  probabilities: rule_1=0.9 rule_2=0.04999999999999999 default=0.04999999999999999
+  reason: devin:fusion-claude-fable-5-1-high-sidekick-swe-2-medium is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:fusion-claude-fable-5-1-high-sidekick-swe-2-medium  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: devin:swe-2-medium  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: claude:sonnet  provider=claude  -> eligible (quota ranking off: home declares a single shared quota)
+# exit=0
+
+$ FM_HOME=<lab> FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_MODEL=local FM_DISPATCH_BASE_URL=http://127.0.0.1:47613 QUOTA_AXI_SNAPSHOT=- bin/fm-dispatch-resolve.sh brief.md   # S5c shared_quota home, modelless devin declared first
+# rules: {"shared_quota":true,"use":[{"harness":"devin"},{"harness":"devin","model":"swe-2-medium"},{"harness":"claude","model":"sonnet","effort":"high"}]}
+dispatch-resolve:
+  status: escalate
+  model: local-systemone   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (Devin work on the session exporter.)   confidence: 0.9
+  probabilities: rule_1=0.9 rule_2=0.04999999999999999 default=0.04999999999999999
+  reason: devin:- is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:-  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: devin:swe-2-medium  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: claude:sonnet  provider=claude  -> eligible (quota ranking off: home declares a single shared quota)
+# exit=0

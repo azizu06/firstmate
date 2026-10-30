@@ -1,0 +1,22 @@
+### base df81d816
+$ bin/fm-quota-choose.sh --snapshot captured.json --candidate devin:swe-2-medium --candidate claude:sonnet
+error: unknown harness: devin
+# exit=2
+$ bin/fm-quota-choose.sh --snapshot captured.json --candidate devin:fusion-claude-fable-5-1-high-sidekick-swe-2-medium
+error: unknown harness: devin
+# exit=2
+$ bin/fm-quota-choose.sh --snapshot captured.json --candidate claude:sonnet
+claude sonnet
+# exit=0
+
+### change ce8b9a69
+$ bin/fm-quota-choose.sh --snapshot captured.json --candidate devin:swe-2-medium --candidate claude:sonnet
+error: unknown harness: devin
+# exit=2
+$ bin/fm-quota-choose.sh --snapshot captured.json --candidate devin:fusion-claude-fable-5-1-high-sidekick-swe-2-medium
+error: unknown harness: devin
+# exit=2
+$ bin/fm-quota-choose.sh --snapshot captured.json --candidate claude:sonnet
+claude sonnet
+# exit=0
+
