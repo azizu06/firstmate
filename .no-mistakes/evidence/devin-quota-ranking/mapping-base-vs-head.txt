@@ -1,0 +1,23 @@
+
+==================== base (355a3071) : provider-less devin profiles, healthy included window ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"swe-2-medium"},{"harness":"devin","model":"claude-opus-4-7"},{"harness":"claude","model":"sonnet","effort":"high"}]}]}
+$ bin/fm-dispatch-resolve.sh brief.md
+error: malformed rules file: /var/folders/ml/g9hzrwq51sj3kth8nt3yxj840000gn/T//fm-lab.aa3UYQ/config/crew-dispatch.json - use profiles whose harness lacks one authoritative provider family require provider: devin; use profiles whose harness lacks one authoritative provider family require provider: devin
+[exit 2]
+
+==================== head (eec75f1c) : provider-less devin profiles, healthy included window ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"swe-2-medium"},{"harness":"devin","model":"claude-opus-4-7"},{"harness":"claude","model":"sonnet","effort":"high"}]}]}
+$ bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: devin:claude-opus-4-7 is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:swe-2-medium  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:claude-opus-4-7  provider=devin  scope=included_quota  remaining=80%  spendPriority=1.5772  runway=through_reset  -> eligible
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5112  runway=through_reset  -> eligible
+[exit 0]

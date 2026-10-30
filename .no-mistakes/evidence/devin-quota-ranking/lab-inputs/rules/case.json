@@ -1,0 +1,3 @@
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[
+ {"harness":"devin","model":"SWE-2-Medium"},
+ {"harness":"claude","model":"sonnet","effort":"high"}]}]}

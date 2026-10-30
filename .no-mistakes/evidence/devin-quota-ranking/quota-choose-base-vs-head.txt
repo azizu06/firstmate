@@ -1,0 +1,35 @@
+
+==================== base (355a3071) ====================
+$ bin/fm-quota-choose.sh --snapshot qa-healthy.json --candidate devin:swe-2-medium --candidate claude:sonnet
+error: unknown harness: devin
+[exit 2]
+$ bin/fm-quota-choose.sh --snapshot qa-healthy.json --candidate devin:swe-2-medium
+error: unknown harness: devin
+[exit 2]
+$ bin/fm-quota-choose.sh --snapshot qa-healthy.json --candidate devin:claude-opus-4-7
+error: unknown harness: devin
+[exit 2]
+$ bin/fm-quota-choose.sh --snapshot qa-healthy.toon --candidate devin:swe-2-max --candidate claude:sonnet
+error: unknown harness: devin
+[exit 2]
+$ bin/fm-quota-choose.sh --snapshot qa-healthy.json --candidate claude:sonnet
+claude sonnet
+[exit 0]
+
+==================== head (eec75f1c) ====================
+$ bin/fm-quota-choose.sh --snapshot qa-healthy.json --candidate devin:swe-2-medium --candidate claude:sonnet
+error: unknown harness: devin
+[exit 2]
+$ bin/fm-quota-choose.sh --snapshot qa-healthy.json --candidate devin:swe-2-medium
+error: unknown harness: devin
+[exit 2]
+$ bin/fm-quota-choose.sh --snapshot qa-healthy.json --candidate devin:claude-opus-4-7
+error: unknown harness: devin
+[exit 2]
+$ bin/fm-quota-choose.sh --snapshot qa-healthy.toon --candidate devin:swe-2-max --candidate claude:sonnet
+error: unknown harness: devin
+[exit 2]
+$ bin/fm-quota-choose.sh --snapshot qa-healthy.json --candidate claude:sonnet
+claude sonnet
+[exit 0]
+IDENTICAL (ignoring blank lines)

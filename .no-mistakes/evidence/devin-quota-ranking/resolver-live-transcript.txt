@@ -1,0 +1,261 @@
+
+==================== S1/S3 healthy included window: Free + modelless unranked, priced devin ranks and wins -> escalate ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"swe-2-high"},{"harness":"devin","model":"swe-2-medium"},{"harness":"devin","model":"swe-2-max"},{"harness":"devin"},{"harness":"devin","model":"claude-opus-4-7"},{"harness":"claude","model":"sonnet","effort":"high"}]}],"default":[{"harness":"claude","model":"opus"}]}
+$ QUOTA_AXI_SNAPSHOT=snap-healthy.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":500,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":80,"runway":"through_reset","spendPriority":1.5762}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: devin:claude-opus-4-7 is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:swe-2-high  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:swe-2-medium  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:swe-2-max  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:-  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:claude-opus-4-7  provider=devin  scope=included_quota  remaining=80%  spendPriority=1.5763  runway=through_reset  -> eligible
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5103  runway=through_reset  -> eligible
+[exit 0]
+
+==================== S2/S4 exhausted included window + $500 credits: Free/modelless not vetoed, priced vetoed, native claude clears ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"swe-2-high"},{"harness":"devin","model":"swe-2-medium"},{"harness":"devin","model":"swe-2-max"},{"harness":"devin"},{"harness":"devin","model":"claude-opus-4-7"},{"harness":"claude","model":"sonnet","effort":"high"}]}],"default":[{"harness":"claude","model":"opus"}]}
+$ QUOTA_AXI_SNAPSHOT=snap-exhausted.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":500,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":0,"runway":"exhausted_now","spendPriority":-1.7451}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: clear
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  note: rule matched
+  note: 4 eligible candidate(s) unranked (devin)
+  candidate: devin:swe-2-high  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:swe-2-medium  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:swe-2-max  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:-  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:claude-opus-4-7  provider=devin  scope=included_quota  remaining=0%  spendPriority=-  runway=exhausted_now  -> not eligible: runway exhausted_now at included_quota
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5104  runway=through_reset  -> eligible
+  profile: --harness 'claude' --model 'sonnet' --effort 'high'
+[exit 0]
+
+==================== S5a case-variant SWE-2-Medium is not Free: ranks on included_quota and escalates ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"SWE-2-Medium"},{"harness":"claude","model":"sonnet","effort":"high"}]}]}
+$ QUOTA_AXI_SNAPSHOT=snap-exhausted.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":500,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":0,"runway":"exhausted_now","spendPriority":-1.745}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: clear
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  note: rule matched
+  candidate: devin:SWE-2-Medium  provider=devin  scope=included_quota  remaining=0%  spendPriority=-  runway=exhausted_now  -> not eligible: runway exhausted_now at included_quota
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5106  runway=through_reset  -> eligible
+  profile: --harness 'claude' --model 'sonnet' --effort 'high'
+[exit 0]
+
+==================== S5b prefixed acme/swe-2-max is not Free: ranks on included_quota and escalates ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"acme/swe-2-max"},{"harness":"claude","model":"sonnet","effort":"high"}]}]}
+$ QUOTA_AXI_SNAPSHOT=snap-exhausted.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":500,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":0,"runway":"exhausted_now","spendPriority":-1.745}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: clear
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  note: rule matched
+  candidate: devin:acme/swe-2-max  provider=devin  scope=included_quota  remaining=0%  spendPriority=-  runway=exhausted_now  -> not eligible: runway exhausted_now at included_quota
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5106  runway=through_reset  -> eligible
+  profile: --harness 'claude' --model 'sonnet' --effort 'high'
+[exit 0]
+
+==================== S7a explicit provider:claude on a Free devin line wins over the map (claude all_models row) and clears ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"swe-2-medium","provider":"claude"},{"harness":"devin","model":"claude-opus-4-7"}]}]}
+$ QUOTA_AXI_SNAPSHOT=snap-exhausted.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":500,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":0,"runway":"exhausted_now","spendPriority":-1.745}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: clear
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  note: rule matched
+  candidate: devin:swe-2-medium  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5106  runway=through_reset  -> eligible
+  candidate: devin:claude-opus-4-7  provider=devin  scope=included_quota  remaining=0%  spendPriority=-  runway=exhausted_now  -> not eligible: runway exhausted_now at included_quota
+  profile: --harness 'devin' --model 'swe-2-medium'
+[exit 0]
+
+==================== S7b explicit provider:claude on a priced devin line still escalates for approval ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"claude-opus-4-7","provider":"claude"},{"harness":"claude","model":"sonnet","effort":"high"}]}]}
+$ QUOTA_AXI_SNAPSHOT=snap-exhausted.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":500,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":0,"runway":"exhausted_now","spendPriority":-1.745}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: genuine spendPriority tie
+  note: rule matched
+  candidate: devin:claude-opus-4-7  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5107  runway=through_reset  -> eligible
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5107  runway=through_reset  -> eligible
+[exit 0]
+
+==================== S5c case-variant SWE-2-Medium with healthy included window wins -> escalate ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"SWE-2-Medium"},{"harness":"claude","model":"sonnet","effort":"high"}]}]}
+$ QUOTA_AXI_SNAPSHOT=snap-healthy.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":500,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":80,"runway":"through_reset","spendPriority":1.5766}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: devin:SWE-2-Medium is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:SWE-2-Medium  provider=devin  scope=included_quota  remaining=80%  spendPriority=1.5766  runway=through_reset  -> eligible
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5107  runway=through_reset  -> eligible
+[exit 0]
+
+==================== S5d prefixed acme/swe-2-max with healthy included window wins -> escalate ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"acme/swe-2-max"},{"harness":"claude","model":"sonnet","effort":"high"}]}]}
+$ QUOTA_AXI_SNAPSHOT=snap-healthy.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":500,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":80,"runway":"through_reset","spendPriority":1.5766}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: devin:acme/swe-2-max is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:acme/swe-2-max  provider=devin  scope=included_quota  remaining=80%  spendPriority=1.5766  runway=through_reset  -> eligible
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5107  runway=through_reset  -> eligible
+[exit 0]
+
+==================== S7c explicit provider:claude Free devin line, healthy ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"swe-2-medium","provider":"claude"},{"harness":"devin","model":"claude-opus-4-7"}]}]}
+$ QUOTA_AXI_SNAPSHOT=snap-healthy.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":500,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":80,"runway":"through_reset","spendPriority":1.5766}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: devin:claude-opus-4-7 is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:swe-2-medium  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5107  runway=through_reset  -> eligible
+  candidate: devin:claude-opus-4-7  provider=devin  scope=included_quota  remaining=80%  spendPriority=1.5766  runway=through_reset  -> eligible
+[exit 0]
+
+==================== S7b' explicit provider:claude on a priced devin line (no tie) still escalates for approval ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"claude-opus-4-7","provider":"claude"},{"harness":"devin","model":"swe-2-high"}]}]}
+$ QUOTA_AXI_SNAPSHOT=snap-exhausted.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":500,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":0,"runway":"exhausted_now","spendPriority":-1.7449}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: devin:claude-opus-4-7 is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:claude-opus-4-7  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5108  runway=through_reset  -> eligible
+  candidate: devin:swe-2-high  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+[exit 0]
+
+==================== S6a shared_quota: modelless devin declared first -> escalate, never clear ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"shared_quota":true,"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin"},{"harness":"claude","model":"sonnet"}]}]}
+# shared_quota: true -> the resolver makes no quota-axi call; declared order picks
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: devin:- is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:-  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: claude:sonnet  provider=claude  -> eligible (quota ranking off: home declares a single shared quota)
+[exit 0]
+
+==================== S6b shared_quota: Free swe-2-medium declared first -> clear with devin profile ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"shared_quota":true,"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"swe-2-medium"},{"harness":"claude","model":"sonnet"}]}]}
+# shared_quota: true -> the resolver makes no quota-axi call; declared order picks
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: clear
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  note: rule matched
+  candidate: devin:swe-2-medium  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: claude:sonnet  provider=claude  -> eligible (quota ranking off: home declares a single shared quota)
+  profile: --harness 'devin' --model 'swe-2-medium'
+[exit 0]
+
+==================== S6c shared_quota: case-variant SWE-2-MAX declared first -> escalate ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"shared_quota":true,"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"SWE-2-MAX"},{"harness":"claude","model":"sonnet"}]}]}
+# shared_quota: true -> the resolver makes no quota-axi call; declared order picks
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: devin:SWE-2-MAX is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:SWE-2-MAX  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: claude:sonnet  provider=claude  -> eligible (quota ranking off: home declares a single shared quota)
+[exit 0]
+
+==================== S6d shared_quota: priced gpt-5.5 on devin declared first -> escalate ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"shared_quota":true,"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"gpt-5.5"},{"harness":"claude","model":"sonnet"}]}]}
+# shared_quota: true -> the resolver makes no quota-axi call; declared order picks
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: devin:gpt-5.5 is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:gpt-5.5  provider=devin  -> eligible (quota ranking off: home declares a single shared quota)
+  candidate: claude:sonnet  provider=claude  -> eligible (quota ranking off: home declares a single shared quota)
+[exit 0]
+
+==================== S4b healthy included window + $0 credits: priced devin still ranks on included_quota alone (credits never read as headroom) ====================
+$ cat $FM_HOME/config/crew-dispatch.json
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[{"harness":"devin","model":"swe-2-medium"},{"harness":"devin","model":"claude-opus-4-7"},{"harness":"claude","model":"sonnet","effort":"high"}]}]}
+$ QUOTA_AXI_SNAPSHOT=snap-nocredits.json quota-axi --json   # devin row as the resolver sees it
+{"provider":"devin","credits":{"remaining":0,"unit":"usd"},"effectiveAvailability":[{"scope":"included_quota","effectivePercentRemaining":80,"runway":"through_reset","spendPriority":1.5757}]}
+$ FM_HOME=$LAB FM_DISPATCH_PROVIDER=systemone FM_DISPATCH_BASE_URL=http://127.0.0.1:$PORT bin/fm-dispatch-resolve.sh brief.md
+dispatch-resolve:
+  status: escalate
+  model: jev-lab   latency_ms: 0   tokens: 100/5
+  rule: rule_1 (A simple bug fix with a stated root cause.)   confidence: 0.9
+  probabilities: rule_1=0.9 default=0.1
+  reason: devin:claude-opus-4-7 is not a Free SWE-2 line: a priced Devin launch requires the captain's explicit approval before dispatch and is allowed only when the native Claude or Codex quota is exhausted
+  note: rule matched
+  candidate: devin:swe-2-medium  provider=devin  -> eligible, unranked: no applicable quota row for provider devin: disclosed uncertainty
+  candidate: devin:claude-opus-4-7  provider=devin  scope=included_quota  remaining=80%  spendPriority=1.5757  runway=through_reset  -> eligible
+  candidate: claude:sonnet  provider=claude  scope=all_models  remaining=60%  spendPriority=0.5098  runway=through_reset  -> eligible
+[exit 0]

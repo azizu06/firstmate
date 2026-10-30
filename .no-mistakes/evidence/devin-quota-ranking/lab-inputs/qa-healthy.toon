@@ -1,0 +1,29 @@
+bin: ~/.nvm/versions/node/v24.22.1/bin/quota-axi
+description: Report local agent-provider quota windows for routing-aware agents
+generatedAt: "2026-10-30T21:37:28.267Z"
+quota[2]{provider,scope,effectivePercentRemaining,spendPriority,runway,confidence,limitedBy,resetsAt}:
+  claude,all_models,60,0.5113,through_reset,established,five_hour,"2026-10-31T00:35:30Z"
+  devin,included_quota,80,1.5774,through_reset,established,weekly,"2026-11-02T21:35:30Z"
+exhaustion[0]:
+attention[19]{provider,scope,kind,detail,remedy}:
+  claude,all,reused,"last refreshed 2026-10-30T21:35:30Z",none
+  codex,all,unavailable,not_in_snapshot,none
+  cursor,all,unavailable,not_in_snapshot,none
+  copilot,all,unavailable,not_in_snapshot,none
+  grok,all,unavailable,not_in_snapshot,none
+  kimi,all,unavailable,not_in_snapshot,none
+  zai,all,unavailable,not_in_snapshot,none
+  agy,all,unavailable,not_in_snapshot,none
+  alibaba,all,unavailable,not_in_snapshot,none
+  opencode-go,all,unavailable,not_in_snapshot,none
+  commandcode,all,unavailable,not_in_snapshot,none
+  minimax,all,unavailable,not_in_snapshot,none
+  mimo,all,unavailable,not_in_snapshot,none
+  deepseek,all,unavailable,not_in_snapshot,none
+  openrouter,all,unavailable,not_in_snapshot,none
+  elevenlabs,all,unavailable,not_in_snapshot,none
+  devin,all,reused,"last refreshed 2026-10-30T21:35:30Z",none
+  muse,all,unavailable,not_in_snapshot,none
+  higgsfield,all,unavailable,not_in_snapshot,none
+help[1]:
+  Run `quota-axi --full` for windows, pace, reserve, and account evidence

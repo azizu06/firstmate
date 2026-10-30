@@ -1,0 +1,80 @@
+{
+ "schemaVersion": 3,
+ "providers": [
+  {
+   "provider": "devin",
+   "label": "Devin",
+   "source": "api",
+   "plan": "Pro",
+   "windows": [
+    {
+     "id": "weekly",
+     "label": "week",
+     "kind": "weekly",
+     "percentRemaining": 0.0,
+     "percentUsed": 100.0,
+     "windowSeconds": 604800,
+     "startsAt": "2026-10-26T21:35:30Z",
+     "resetsAt": "2026-11-02T21:35:30Z"
+    },
+    {
+     "id": "daily",
+     "label": "day",
+     "kind": "session",
+     "percentRemaining": 0.0,
+     "percentUsed": 100.0,
+     "windowSeconds": 86400,
+     "startsAt": "2026-10-30T07:35:30Z",
+     "resetsAt": "2026-10-31T07:35:30Z"
+    }
+   ],
+   "credits": {
+    "remaining": 500.0,
+    "unit": "usd"
+   },
+   "state": {
+    "status": "fresh",
+    "stale": false,
+    "refreshedAt": "2026-10-30T21:35:30Z",
+    "sourcesTried": [
+     "api"
+    ]
+   }
+  },
+  {
+   "provider": "claude",
+   "label": "Claude",
+   "source": "oauth",
+   "windows": [
+    {
+     "id": "five_hour",
+     "label": "session",
+     "kind": "session",
+     "percentRemaining": 60.0,
+     "percentUsed": 40.0,
+     "windowSeconds": 18000,
+     "startsAt": "2026-10-30T19:35:30Z",
+     "resetsAt": "2026-10-31T00:35:30Z"
+    },
+    {
+     "id": "seven_day",
+     "label": "week",
+     "kind": "weekly",
+     "percentRemaining": 70.0,
+     "percentUsed": 30.0,
+     "windowSeconds": 604800,
+     "startsAt": "2026-10-27T21:35:30Z",
+     "resetsAt": "2026-11-03T21:35:30Z"
+    }
+   ],
+   "state": {
+    "status": "fresh",
+    "stale": false,
+    "refreshedAt": "2026-10-30T21:35:30Z",
+    "sourcesTried": [
+     "oauth"
+    ]
+   }
+  }
+ ]
+}

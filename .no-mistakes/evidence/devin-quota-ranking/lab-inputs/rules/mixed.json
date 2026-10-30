@@ -1,0 +1,8 @@
+{"rules":[{"when":"A simple bug fix with a stated root cause.","use":[
+ {"harness":"devin","model":"swe-2-high"},
+ {"harness":"devin","model":"swe-2-medium"},
+ {"harness":"devin","model":"swe-2-max"},
+ {"harness":"devin"},
+ {"harness":"devin","model":"claude-opus-4-7"},
+ {"harness":"claude","model":"sonnet","effort":"high"}]}],
+ "default":[{"harness":"claude","model":"opus"}]}
